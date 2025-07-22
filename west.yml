@@ -1,0 +1,20 @@
+# Example T2 west.yml, using manifest imports.
+manifest:
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+    - name: lora-net
+      url-base: https://github.com/Lora-net
+  projects:
+    - name: zephyr
+      remote: zephyrproject-rtos
+      revision: main
+      import: true
+    - name: LBM_Zephyr
+      path: modules/LBM_Zephyr
+      remote: lora-net
+      repo-path: LBM_Zephyr
+      revision: master
+      import: true
+  self:
+    path: IoT
