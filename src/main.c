@@ -1,48 +1,67 @@
 /*
- * Copyright (c) 2016 Intel Corporation
+ * Copyright (c) 2022 Thomas Stranger
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <stdio.h>
 #include <zephyr/kernel.h>
-#include <zephyr/drivers/gpio.h>
-
-/* 1000 msec = 1 sec */
-#define SLEEP_TIME_MS   1000
-
-/* The devicetree node identifier for the "led0" alias. */
-#define LED0_NODE DT_ALIAS(led0)
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <zephyr/drivers/sensor.h>
 
 /*
- * A build error on this line means your board is unsupported.
- * See the sample documentation for information on how to fix this.
+ * Get a device structure from a devicetree node with compatible
+ * "maxim,ds18b20". (If there are multiple, just pick one.)
  */
-static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
+static const struct device *get_ds18b20_device(void)
+{
+	const struct device *const dev = DEVICE_DT_GET_ANY(maxim_ds18b20);
+
+	if (dev == NULL) {
+		/* No such node, or the node does not have status "okay". */
+		printk("\nError: no device found.\n");
+		return NULL;
+	}
+
+	if (!device_is_ready(dev)) {
+		printk("\nError: Device \"%s\" is not ready; "
+		       "check the driver initialization logs for errors.\n",
+		       dev->name);
+		return NULL;
+	}
+
+	printk("Found device \"%s\", getting sensor data\n", dev->name);
+	return dev;
+}
 
 int main(void)
 {
-	int ret;
-	bool led_state = true;
+	const struct device *dev = get_ds18b20_device();
+	int res;
 
-	if (!gpio_is_ready_dt(&led)) {
+	if (dev == NULL) {
 		return 0;
 	}
 
-	ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE);
-	if (ret < 0) {
-		return 0;
-	}
+	while (true) {
+		struct sensor_value temp;
 
-	while (1) {
-		ret = gpio_pin_toggle_dt(&led);
-		if (ret < 0) {
-			return 0;
+		res = sensor_sample_fetch(dev);
+		if (res != 0) {
+			printk("sample_fetch() failed: %d\n", res);
+			return res;
 		}
 
-		led_state = !led_state;
-		printf("LED state: %s\n", led_state ? "ON" : "OFF");
-		k_msleep(SLEEP_TIME_MS);
+		res = sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &temp);
+		if (res != 0) {
+			printk("channel_get() failed: %d\n", res);
+			return res;
+		}
+
+		printk("Temp: %d.%06d\n", temp.val1, temp.val2);
+		k_sleep(K_MSEC(2000));
 	}
+
 	return 0;
 }
+
