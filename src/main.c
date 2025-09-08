@@ -37,6 +37,7 @@ static const struct device *get_ds18b20_device(void)
 int main(void)
 {
 	const struct device *dev = get_ds18b20_device();
+	printk("Get Device Data\n");
 	int res;
 
 	if (dev == NULL) {
@@ -45,8 +46,9 @@ int main(void)
 
 	while (true) {
 		struct sensor_value temp;
-
+		
 		res = sensor_sample_fetch(dev);
+		printk("Get sensor_sample_fetch\n");
 		if (res != 0) {
 			printk("sample_fetch() failed: %d\n", res);
 			return res;
