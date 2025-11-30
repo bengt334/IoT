@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    environment {
+        ZEPHYR_SDK_INSTALL_DIR  = "/opt/zephyr-sdk"
+        ZEPHYR_TOOLCHAIN_VARIANT = "zephyr"
+        ZEPHYR_BASE = "${WORKSPACE}/zephyr" // if zpehyr is a submodule /west workspace
+        BOARD = "native_sim"
+    }
+   
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('West init and update') {
+            steps {
+                #if this repo is the app +west.yml workspace:
+                sh '''
+                if [ ! -d .west ]; then
+                  west init -l app
+               fi
+               west update
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh ''' 
+                west build -b & {BOARD} app
+                '''
+            }
+        }
+    }
+    
+    post {
+        always {
+            archiveArtifacts artifacts: 'build/**', allowEmptyArchive: true
+        }
+    }
+}
