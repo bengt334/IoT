@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'zephyrprojectrtos/zephyr-build:v0.28.4' //or your own derived image
-            args 'u jenkins:jenkins // if needed fir uid/gid
+            args 'u jenkins:jenkins' // if needed fir uid/gid
         }
     }
     stages {
