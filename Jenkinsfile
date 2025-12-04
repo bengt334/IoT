@@ -2,10 +2,18 @@ pipeline {
     agent any
 
     stages {
-        stage('Build in Docker') {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build with Docker') {
             steps {
                 sh '''
-                    docker run --rm -v $PWD:/workspace -w /workspace \
+                    docker run --rm \
+                        -v $PWD:/workspace \
+                        -w /workspace \
                         zephyrprojectrtos/zephyr-build:latest \
                         sh -c "
                             west init -l . &&
