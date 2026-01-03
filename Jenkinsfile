@@ -1,26 +1,43 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'zephyrprojectrtos/ci:latest'
+            args 'u root:root'
+        }
+    }
 
+    environment {
+        BOARD = 'esp32s3_devkitc/esp32s3/procpu'
+        APP_PATH = '.'
+    }
     stages {
         stage('Checkout') {
-            steps {
-                checkout scm
+            steps { 
+                git branch: 'main',
+                    url:'https://github.com/bengt334/IoT'
             }
         }
-
-        stage('Build with Docker') {
+        stage('West init/update') {
             steps {
                 sh '''
-                    docker run --rm \
-                        -v $PWD:/workspace \
-                        -w /workspace \
-                        zephyrprojectrtos/zephyr-build:latest \
-                        sh -c "
-                            west init -l . &&
-                            west update &&
-                            west build -b nrf52840dk_nrf52840 app/
-                        "
+                    if [ ! -d .west ]; then 
+                        west init -l ${APP_PATH}
+                        west update
+                    fi
                 '''
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '''
+                    west build -b ${BOARD} ${APP_PATH} -fingerprinthuhuhuh-pristine
+                '''
+            }
+        }
+        stage('Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'build/zephyr/zephyr.*',
+                    fingerprint:true
             }
         }
     }
