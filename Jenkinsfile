@@ -14,24 +14,26 @@ pipeline {
         }
         stage('Zephyr build in Docker') {
             steps {
-                def ws = pwd()
-                sh """
-                    docker pull  ${ZEPHYR_IMAGE}
-                    docker run --rm \\
-                        -v "${ws}":/workdir \\
-                        -w /workdir \\
-                        ${ZEPHYR_IMAGE} \\
-                        /bin/bash -lc '
-                            set -e
-                            #initiera zephyr workspace om det inte redan finns
-                            if [ ! -d".west" ]; then 
-                                west init -l
-                                west update
-                            fi
-                            #Anpassa board och app path
-                            west build -b ${BOARD} . --pristine
-                        '
-                """
+                script {
+                    def ws = pwd()
+                    sh """
+                        docker pull  ${ZEPHYR_IMAGE}
+                        docker run --rm \\
+                            -v "${ws}":/workdir \\
+                            -w /workdir \\
+                            ${ZEPHYR_IMAGE} \\
+                            /bin/bash -lc '
+                                set -e
+                                #initiera zephyr workspace om det inte redan finns
+                                if [ ! -d".west" ]; then 
+                                    west init -l
+                                    west update
+                                fi
+                                #Anpassa board och app path
+                                west build -b ${BOARD} . --pristine
+                            '
+                    """
+                }
             }
         }
         stage('Artifacts') {
