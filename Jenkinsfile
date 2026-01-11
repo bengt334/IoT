@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps { 
-                git url: 'git@github.com:bengt334/IoT.git', 
+                git url: 'https://github.com/bengt334/IoT.git', 
                 branch: 'master'
             }
         }
