@@ -1,12 +1,7 @@
 pipeline {
-    agent {
-        docker {
-            image 'zephyrprojectrtos/ci:latest'
-            args 'u root:root'
-        }
-    }
-
+    agent any 
     environment {
+        ZEPHYR_IMAGE = 'zephyrprojectrtos/zephyr-build:latest'
         BOARD = 'esp32s3_devkitc/esp32s3/procpu'
         APP_PATH = '.'
     }
@@ -17,26 +12,31 @@ pipeline {
                     url:'https://github.com/bengt334/IoT'
             }
         }
-        stage('West init/update') {
+        stage('Zephyr build in Docker') {
             steps {
-                sh '''
-                    if [ ! -d .west ]; then 
-                        west init -l ${APP_PATH}
-                        west update
-                    fi
-                '''
-            }
-        }
-        stage('Build') {
-            steps {
-                sh '''
-                    west build -b ${BOARD} ${APP_PATH} -fingerprinthuhuhuh-pristine
-                '''
+                def ws = pwd()
+                sh """
+                    docker pull  ${ZEPHYR_IMAGE}
+                    docker run --rm \\
+                        -v "${ws}":/workdir \\
+                        -w /workdir \\
+                        ${ZEPHYR_IMAGE} \\
+                        /bin/bash -lc '
+                            set -e
+                            #initiera zephyr workspace om det inte redan finns
+                            if [ ! -d".west" ]; then 
+                                west init -l
+                                west update
+                            fi
+                            #Anpassa board och app path
+                            west build -b ${BOARD} . --pristine
+                        '
+                """
             }
         }
         stage('Artifacts') {
             steps {
-                archiveArtifacts artifacts: 'build/zephyr/zephyr.*',
+                archiveArtifacts artifacts: 'build/zephyr/*.elf, build/zephyr/*.bin, build/zephyr/*.hex,',
                     fingerprint:true
             }
         }
