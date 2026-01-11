@@ -8,8 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps { 
-                git branch: 'main',
-                    url:'https://github.com/bengt334/IoT'
+                git url:'https://github.com/bengt334/IoT.git', branch 'master'
             }
         }
         stage('Zephyr build in Docker') {
