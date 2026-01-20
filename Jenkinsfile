@@ -26,7 +26,7 @@ pipeline {
                                 set -e
                                 #initiera zephyr workspace om det inte redan finns
                                 if [ ! -d".west" ]; then 
-                                    west init -l
+                                    west init -l .
                                     west update
                                 fi
                                 #Anpassa board och app path
