@@ -25,7 +25,7 @@ pipeline {
                             /bin/bash -lc '
                                 set -e
                                 #initiera zephyr workspace om det inte redan finns
-                                if [ ! -d".west" ]; then 
+                                if [ ! -d ".west" ]; then 
                                     west init -l .
                                     west update
                                 fi
