@@ -32,7 +32,7 @@ pipeline {
                                     west update
                                 fi
                                 #Anpassa board och app path
-                                west build -b ${BOARD} . --pristine
+                                west build -b ${BOARD} IoT --pristine
                             '
                     """
                 }
