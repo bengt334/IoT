@@ -1,4 +1,4 @@
-opipeline {
+pipeline {
     agent any 
     environment {
         ZEPHYR_IMAGE = 'zephyrprojectrtos/zephyr-build:latest'
