@@ -20,10 +20,14 @@ pipeline {
                         docker pull  ${ZEPHYR_IMAGE}
                         docker run --rm \\
                             -v "${ws}":/workdir \\
-                            -w /workdir \\
-                            ${ZEPHYR_IMAGE} \\
+                            -w /workdir \
+                            ${ZEPHYR_IMAGE} \
                             /bin/bash -lc '
                                 set -e
+                                mkdir -p /workdir
+                                cd /workdir
+                                echo "CWD:"; pwd
+                                ls
                                 #initiera zephyr workspace om det inte redan finns
                                 if [ ! -d ".west" ]; then 
                                     west init -l .
