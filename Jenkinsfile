@@ -1,4 +1,4 @@
-pipeline {
+opipeline {
     agent any 
     environment {
         ZEPHYR_IMAGE = 'zephyrprojectrtos/zephyr-build:latest'
@@ -18,19 +18,17 @@ pipeline {
                     def ws = pwd()
                     sh """
                         docker pull  ${ZEPHYR_IMAGE}
-                        docker run --rm \\
-                            -v "${ws}":/workdir \\
+                        docker run --rm \
+                            -v "${ws}":/workdir/repo \
                             -w /workdir \
                             ${ZEPHYR_IMAGE} \
                             /bin/bash -lc '
                                 set -e
-                                mkdir -p /workdir
-                                cd /workdir
                                 echo "CWD:"; pwd
                                 ls
                                 #initiera zephyr workspace om det inte redan finns
                                 if [ ! -d ".west" ]; then 
-                                    west init -l .
+                                    west init -l repo
                                     west update
                                 fi
                                 #Anpassa board och app path
