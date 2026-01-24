@@ -33,7 +33,7 @@ pipeline {
                                 fi
                                 #Anpassa board och app path
                                 ls repo
-                                west build -b ${BOARD} repo/IoT --pristine
+                                west build -b ${BOARD} repo --pristine
                             '
                     """
                 }
