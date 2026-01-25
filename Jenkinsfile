@@ -41,6 +41,7 @@ pipeline {
         }
         stage('Artifacts') {
             steps {
+                sh 'pwd && ls -R'
                 archiveArtifacts artifacts: '/workdir/build/zephyr/*.elf, /workdir/build/zephyr/*.bin, /workdir/build/zephyr/*.hex,',
                     fingerprint:true
             }
