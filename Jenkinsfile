@@ -41,8 +41,7 @@ pipeline {
         }
         stage('Artifacts') {
             steps {
-                cd ..
-                archiveArtifacts artifacts: 'build/zephyr/*.elf, build/zephyr/*.bin, build/zephyr/*.hex,', fingerprint:true
+                archiveArtifacts artifacts: '../build/zephyr/*.elf, ../build/zephyr/*.bin, ../build/zephyr/*.hex,', fingerprint:true
             }
         }
     }
