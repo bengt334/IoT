@@ -33,7 +33,7 @@ pipeline {
                                 fi
                                 #Anpassa board och app path
                                 ls IoT
-                                west build -b ${BOARD} IoT --pristine --build-dir IoT/build
+                                west build -b ${BOARD} IoT --pristine
                             '
                     """
                 }
@@ -41,7 +41,8 @@ pipeline {
         }
         stage('Artifacts') {
             steps {
-                sh 'pwd && ls -R'
+                cd ..
+                sh '. && ls -R'
                 archiveArtifacts artifacts: 'build/zephyr/*.elf, build/zephyr/*.bin, build/zephyr/*.hex,', fingerprint:true
             }
         }
