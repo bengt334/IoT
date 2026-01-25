@@ -42,7 +42,6 @@ pipeline {
         stage('Artifacts') {
             steps {
                 cd ..
-                sh './ && ls -R'
                 archiveArtifacts artifacts: 'build/zephyr/*.elf, build/zephyr/*.bin, build/zephyr/*.hex,', fingerprint:true
             }
         }
