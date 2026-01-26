@@ -20,7 +20,7 @@ pipeline {
                         docker pull ${ZEPHYR_IMAGE}
                         docker run --rm \
                             -v "${ws}":/workdir/IoT \
-                            -w /workdir/IoT \
+                            -w /workdir \
                             ${ZEPHYR_IMAGE} \
                             /bin/bash -lc '
                                 set -e
@@ -33,7 +33,7 @@ pipeline {
                                 fi
                                 #Anpassa board och app path
                                 ls IoT
-                                west build -b ${BOARD} . --pristine
+                                west build -b ${BOARD} IoT --pristine
                                 ls -l build/zephyr
                             '
                     """
