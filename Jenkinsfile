@@ -20,7 +20,7 @@ pipeline {
                         docker pull  ${ZEPHYR_IMAGE}
                         docker run --rm \
                             -v "${ws}":/workdir/IoT \
-                            -w /workdir \
+                            -w /workdir/IoT \
                             ${ZEPHYR_IMAGE} \
                             /bin/bash -lc '
                                 set -e
@@ -33,7 +33,7 @@ pipeline {
                                 fi
                                 #Anpassa board och app path
                                 ls IoT
-                                west build -b ${BOARD} IoT --pristine
+                                west build -b ${BOARD} . --pristine
                             '
                     """
                 }
@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Artifacts') {
             steps {
-                archiveArtifacts artifacts: '../build/zephyr/*.elf, ../build/zephyr/*.bin, ../build/zephyr/*.hex,', fingerprint:true
+                archiveArtifacts artifacts: 'build/zephyr/*.elf, build/zephyr/*.bin, build/zephyr/*.hex,', fingerprint:true
             }
         }
     }
