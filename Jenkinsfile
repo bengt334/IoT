@@ -19,7 +19,6 @@ pipeline {
                     sh """
                         docker pull  ${ZEPHYR_IMAGE}
                         docker run --rm \
-                            -v "${ws}":/workdir/IoT \
                             -w /workdir/IoT \
                             ${ZEPHYR_IMAGE} \
                             /bin/bash -lc '
@@ -28,12 +27,13 @@ pipeline {
                                 ls
                                 #initiera zephyr workspace om det inte redan finns
                                 if [ ! -d ".west" ]; then 
-                                    west init -l IoT
+                                    west init -l .
                                     west update
                                 fi
                                 #Anpassa board och app path
                                 ls IoT
                                 west build -b ${BOARD} . --pristine
+                                ls -l build/zephyr
                             '
                     """
                 }
@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Artifacts') {
             steps {
-                archiveArtifacts artifacts: 'build/zephyr/*.elf, build/zephyr/*.bin, build/zephyr/*.hex,', fingerprint:true
+                archiveArtifacts artifacts: 'build/zephyr/*.elf, build/zephyr/*.bin, build/zephyr/*.hex', fingerprint:true
             }
         }
     }
