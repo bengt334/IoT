@@ -37,6 +37,7 @@ pipeline {
                                 ls -l build/zephyr
                             '
                     """
+                    ls IoT
                     archiveArtifacts artifacts: 'build/zephyr/*.elf, build/zephyr/*.bin, build/zephyr/*.hex', fingerprint:true
                 }
             }
