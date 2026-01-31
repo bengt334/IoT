@@ -19,7 +19,7 @@ pipeline {
                     sh """
                         docker pull ${ZEPHYR_IMAGE}
                         docker run --rm \
-                            -v "${ws}":/workdir/IoT \
+                            -v "${ws}":/workdir \
                             -w /workdir \
                             ${ZEPHYR_IMAGE} \
                             /bin/bash -lc '
