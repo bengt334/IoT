@@ -35,7 +35,8 @@ pipeline {
                                 ls IoT
                                 west build -b ${BOARD} IoT --pristine
                                 echo "=== Build output ==="
-                                ls -l /workdir/IoT/build/zephyr
+                                ls -l
+                                cp build/zephyr/zephyr.elf IoT/zephyr.elf
                             '
                     """
                     sh "ls -R ."
