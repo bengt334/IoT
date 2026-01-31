@@ -27,18 +27,19 @@ pipeline {
                                 echo "CWD:"; pwd
                                 ls
                                 #initiera zephyr workspace om det inte redan finns
-                                if [ ! -d ".west" ]; then 
+                                if [ ! -d "IoT/.west" ]; then 
                                     west init -l IoT
                                     west update
                                 fi
                                 #Anpassa board och app path
                                 ls IoT
-                                west build -b ${BOARD} workdir/IoT --pristine
-                                ls -l build/zephyr
+                                west build -b ${BOARD} IoT --pristine
+                                echo "=== Build output ==="
+                                ls -l /workdir/IoT/build/zephyr
                             '
                     """
                     sh "ls -R ."
-                    archiveArtifacts artifacts: 'build/zephyr/*.elf, build/zephyr/*.bin, build/zephyr/*.hex', fingerprint:true
+                    archiveArtifacts artifacts: 'IoT/build/zephyr/*.elf, IoT/build/zephyr/*.bin, IoT/build/zephyr/*.hex', fingerprint:true
                 }
             }
         }
