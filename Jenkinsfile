@@ -36,11 +36,12 @@ pipeline {
                                 west build -b ${BOARD} IoT --pristine
                                 echo "=== Build output ==="
                                 ls -l
+                                chown -R \$(id -u):\$(id -g) /workdir/IoT
                                 cp build/zephyr/zephyr.elf IoT/zephyr.elf
                             '
                     """
                     sh "ls -R ."
-                    archiveArtifacts artifacts: 'IoT/build/zephyr/*.elf, IoT/build/zephyr/*.bin, IoT/build/zephyr/*.hex', fingerprint:true
+                    archiveArtifacts artifacts: 'IoT/zephyr/*.elf, IoT/zephyr/*.bin, IoT/zephyr/*.hex', fingerprint:true
                 }
             }
         }
