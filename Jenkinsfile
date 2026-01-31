@@ -19,7 +19,7 @@ pipeline {
                     sh """
                         docker pull ${ZEPHYR_IMAGE}
                         docker run --rm \
-                            -v "${ws}":/workdir \
+                            -v "${ws}":/workdir/IoT \
                             -w /workdir \
                             ${ZEPHYR_IMAGE} \
                             /bin/bash -lc '
@@ -28,12 +28,12 @@ pipeline {
                                 ls
                                 #initiera zephyr workspace om det inte redan finns
                                 if [ ! -d ".west" ]; then 
-                                    west init -l IoT
+                                    west init -l workdir/IoT
                                     west update
                                 fi
                                 #Anpassa board och app path
                                 ls IoT
-                                west build -b ${BOARD} IoT --pristine
+                                west build -b ${BOARD} workdir/IoT --pristine
                                 ls -l build/zephyr
                             '
                     """
