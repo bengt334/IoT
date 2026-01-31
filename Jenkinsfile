@@ -16,6 +16,8 @@ pipeline {
             steps {
                 script {
                     def ws = pwd()
+                    def uid = sh(returnStdout: true, script: "id -u").trim()
+                    def gid = sh(returnStdout: true, script: "id -g").trim()
                     sh """
                         docker pull ${ZEPHYR_IMAGE}
                         docker run --rm \
@@ -36,7 +38,6 @@ pipeline {
                                 west build -b ${BOARD} IoT --pristine
                                 echo "=== Build output ==="
                                 ls -l
-                                chown -R \$(id -u):\$(id -g) /workdir/IoT
                                 cp build/zephyr/zephyr.elf IoT/zephyr.elf
                             '
                     """
