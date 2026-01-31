@@ -44,6 +44,7 @@ pipeline {
                                 ls -ld build/zephyr
                                 ls -l build/zephyr | head
                                 id
+                                chown -R 1000:1000 /workdir/IoT
                                 cp build/zephyr/zephyr.elf IoT/zephyr.elf
                             '
                     """
