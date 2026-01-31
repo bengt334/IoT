@@ -49,7 +49,7 @@ pipeline {
                             '
                     """
                     sh "ls -R ."
-                    archiveArtifacts artifacts: 'IoT/zephyr/*.elf, IoT/zephyr/*.bin, IoT/zephyr/*.hex', fingerprint:true
+                    archiveArtifacts artifacts: 'IoT/*.elf, IoT/*.bin, IoT/*.hex', fingerprint:true
                 }
             }
         }
