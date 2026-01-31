@@ -41,8 +41,8 @@ pipeline {
                                 echo "=== WHO OWNS THE WORKSPACE? ==="
                                 ls -ld .
                                 ls -ld IoT
-                                ls -ld IoT/build/zephyr
-                                ls -l IoT/build/zephyr | head
+                                ls -ld build/zephyr
+                                ls -l build/zephyr | head
                                 id
                                 cp build/zephyr/zephyr.elf IoT/zephyr.elf
                             '
