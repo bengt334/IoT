@@ -2,7 +2,7 @@ pipeline {
     agent {
         node {
             label ''
-            customWorkspace '/var/lib/jenkins/workspace/ZephyrWS'
+            customWorkspace '/var/lib/jenkins/workspace/BengtnZephyrIoT_master'
         }
     }
     environment {
@@ -36,7 +36,7 @@ pipeline {
                                 ls
                                 #initiera zephyr workspace om det inte redan finns
                                 if [ ! -d "IoT/.west" ]; then 
-                                    west init -l IoT
+                                    west init --local .
                                     west update
                                 fi
                                 #Anpassa board och app path
