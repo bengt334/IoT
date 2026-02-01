@@ -1,5 +1,10 @@
 pipeline {
-    agent any 
+    agent {
+        node {
+            label 'your-agent-label'          // or remove if you use any agent
+            customWorkspace '/var/lib/jenkins/workspace/ZephyrWS'
+        }
+    }
     environment {
         ZEPHYR_IMAGE = 'zephyrprojectrtos/zephyr-build:latest'
         BOARD = 'esp32s3_devkitc/esp32s3/procpu'
