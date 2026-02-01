@@ -24,37 +24,35 @@ pipeline {
                     def uid = sh(returnStdout: true, script: "id -u").trim()
                     def gid = sh(returnStdout: true, script: "id -g").trim()
                     sh """
-                        docker pull ${ZEPHYR_IMAGE}
-                        docker run --rm \\
-                            -u ${uid}:${gid} \\
-                            -v "${ws}":/workdir \\
-                            -w /workdir \\
-                            ${ZEPHYR_IMAGE} \\
-                            /bin/bash -lc '
-                      set -e
-                      echo "CWD:"; pwd
-                      ls
-                      echo "west.yml here?"; ls -l west.yml || echo "NO west.yml"
+                      docker pull ${ZEPHYR_IMAGE}
+                      docker run --rm \
+                          -u ${uid}:${gid} \
+                          -v "${ws}":/workdir \
+                          -w /workdir \
+                          ${ZEPHYR_IMAGE} \
+                          /bin/bash -lc '
+                              set -e
+                              echo "=== DEBUG ==="
+                              echo "whoami:"; whoami
+                              echo "pwd before anything:"; pwd
+                              echo "ls:"; ls
+                              echo "which west:"; which west || echo "no west in PATH"
+                              echo "env WEST_*:"; env | grep ^WEST_ || echo "no WEST_* vars"
 
-                      # Init Zephyr workspace if needed
-                      if [ ! -d ".west" ]; then
-                          west init --local .
-                          west update
-                      fi
+                              echo "west.yml here?"; ls -l west.yml || echo "NO west.yml"
 
-                      # Build this repo as the app
-                      west build -b ${BOARD} . --pristine
+                              echo "Running: west init --local ."
+                              WEST_WORKSPACE=/workdir west init --local .
 
-                      echo "=== Build output ==="
-                      ls -l
-                      echo "=== WHO OWNS THE WORKSPACE? ==="
-                      ls -ld .
-                      ls -ld build/zephyr
-                      ls -l build/zephyr | head
-                      id
+                              echo "Running: west update"
+                              WEST_WORKSPACE=/workdir west update
 
-                      cp build/zephyr/zephyr.elf zephyr.elf
-                      '
+                              echo "Running: west build -b ${BOARD} . --pristine"
+                              WEST_WORKSPACE=/workdir west build -b ${BOARD} . --pristine
+
+                              echo "Copying elf"
+                              cp build/zephyr/zephyr.elf zephyr.elf
+                          '
                 """
                 sh "ls -R ."
                 archiveArtifacts artifacts: '*.elf, *.bin, *.hex', fingerprint:true
