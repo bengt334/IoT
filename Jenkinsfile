@@ -1,6 +1,7 @@
 pipeline {
     agent {
         node {
+            label ''
             customWorkspace '/var/lib/jenkins/workspace/ZephyrWS'
         }
     }
