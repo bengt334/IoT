@@ -1,8 +1,6 @@
 pipeline {
     agent {
-        any
         node {
-            label 'your-agent-label'          // or remove if you use any agent
             customWorkspace '/var/lib/jenkins/workspace/ZephyrWS'
         }
     }
