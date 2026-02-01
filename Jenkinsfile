@@ -25,36 +25,39 @@ pipeline {
                     def gid = sh(returnStdout: true, script: "id -g").trim()
                     sh """
                         docker pull ${ZEPHYR_IMAGE}
-                        docker run --rm \
-                            -u ${uid}:${gid} \
-                            -v "${ws}":/workdir \
-                            -w /workdir \
-                            ${ZEPHYR_IMAGE} \
+                        docker run --rm \\
+                            -u ${uid}:${gid} \\
+                            -v "${ws}":/workdir \\
+                            -w /workdir \\
+                            ${ZEPHYR_IMAGE} \\
                             /bin/bash -lc '
-                                set -e
-                                echo "CWD:"; pwd
-                                ls
-                                #initiera zephyr workspace om det inte redan finns
-                                if [ ! -d "IoT/.west" ]; then 
-                                    west init --local .
-                                    west update
-                                fi
-                                #Anpassa board och app path
-                                ls IoT
-                                west build -b ${BOARD} IoT --pristine
-                                echo "=== Build output ==="
-                                ls -l
-                                echo "=== WHO OWNS THE WORKSPACE? ==="
-                                ls -ld .
-                                ls -ld IoT
-                                ls -ld build/zephyr
-                                ls -l build/zephyr | head
-                                id
-                                cp build/zephyr/zephyr.elf IoT/zephyr.elf
-                            '
-                    """
-                    sh "ls -R ."
-                    archiveArtifacts artifacts: 'IoT/*.elf, IoT/*.bin, IoT/*.hex', fingerprint:true
+                      set -e
+                      echo "CWD:"; pwd
+                      ls
+                      echo "west.yml here?"; ls -l west.yml || echo "NO west.yml"
+
+                      # Init Zephyr workspace if needed
+                      if [ ! -d ".west" ]; then
+                          west init --local .
+                          west update
+                      fi
+
+                      # Build this repo as the app
+                      west build -b ${BOARD} . --pristine
+
+                      echo "=== Build output ==="
+                      ls -l
+                      echo "=== WHO OWNS THE WORKSPACE? ==="
+                      ls -ld .
+                      ls -ld build/zephyr
+                      ls -l build/zephyr | head
+                      id
+
+                      cp build/zephyr/zephyr.elf zephyr.elf
+                      '
+                """
+                sh "ls -R ."
+                archiveArtifacts artifacts: '*.elf, *.bin, *.hex', fingerprint:true
                 }
             }
         }
