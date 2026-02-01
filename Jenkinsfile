@@ -21,6 +21,7 @@ pipeline {
                     sh """
                         docker pull ${ZEPHYR_IMAGE}
                         docker run --rm \
+                            -u ${uid}:${gid} \
                             -v "${ws}":/workdir/IoT \
                             -w /workdir \
                             ${ZEPHYR_IMAGE} \
