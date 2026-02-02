@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        ZEPHYR_IMAGE = 'zephyrprojectrtos/zephyr-build:latest'
+        ZEPHYR_IMAGE = 'my-zephyr-codechecker:latest'
         BOARD       = 'esp32s3_devkitc/esp32s3/procpu'
         APP_PATH    = 'IoT'          // app lives inside cloned repo
     }
@@ -27,7 +27,8 @@ pipeline {
                                 set -e
                                 echo "CWD:"; pwd
                                 ls
-
+                                source /home/user/cc-venv/bin/activate
+                                CodeChecker --version
                                 # Ensure CodeChecker is installed in the image (pip or package)
                                 if ! command -v CodeChecker >/dev/null 2>&1; then
                                     pip install codechecker
