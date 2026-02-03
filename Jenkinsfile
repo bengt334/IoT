@@ -18,7 +18,6 @@ pipeline {
                 script {
                     def ws = pwd()
                     sh """
-                        docker pull ${ZEPHYR_IMAGE}
                         docker run --rm \\
                             -v "${ws}":/workdir \\
                             -w /workdir \\
