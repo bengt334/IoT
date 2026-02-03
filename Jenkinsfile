@@ -42,7 +42,7 @@ pipeline {
                                 ls ${APP_PATH}
 
                                 # 1) Log the build with CodeChecker
-                                CodeChecker log -o compile_commands.json -- \\
+                                CodeChecker log -o compile_commands.json -b \\
                                     west build -b ${BOARD} ${APP_PATH} --pristine
 
                                 # 2) Analyze
