@@ -3,7 +3,7 @@ pipeline {
     environment {
         ZEPHYR_IMAGE = 'my-zephyr-codechecker:latest'
         BOARD       = 'esp32s3_devkitc/esp32s3/procpu'
-        APP_PATH    = '.'          // app lives inside cloned repo
+        APP_PATH    = 'IoT'          // app lives inside cloned repo
     }
     stages {
         stage('Checkout') {
@@ -19,7 +19,7 @@ pipeline {
                     def ws = pwd()
                     sh """
                         docker run --rm \\
-                            -v "${ws}":/workdir \\
+                            -v "${ws}":/workdir/${APP_PATH} \\
                             -w /workdir \\
                             ${ZEPHYR_IMAGE} \\
                             /bin/bash -lc '
