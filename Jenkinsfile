@@ -27,7 +27,7 @@ pipeline {
                                 echo "CWD:"; pwd
                                 ls
                                 source /home/user/cc-venv/bin/activate
-                                CodeChecker --version
+                                CodeChecker version
                                 # Ensure CodeChecker is installed in the image (pip or package)
                                 if ! command -v CodeChecker >/dev/null 2>&1; then
                                     pip install codechecker
