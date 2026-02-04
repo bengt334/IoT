@@ -42,12 +42,15 @@ pipeline {
                                 ls ${APP_PATH}
 
                                 # 1) Log the build with CodeChecker
+                                 echo "*******************CodeChecker log -o**************************"
                                 CodeChecker log -o compile_commands.json -b "west build -b ${BOARD} ${APP_PATH} --pristine -DZEPHYR_SCA_VARIANT=codechecker"
 
                                 # 2) Analyze
+                                echo "*******************CodeChecker analyze compile**************************"
                                 CodeChecker analyze compile_commands.json -o cc_reports
 
                                 # Optional: create HTML from reports for easier viewing
+                                echo "*******************CodeChecker parse*************************"
                                 CodeChecker parse cc_reports -e html -o cc_html
 
                                 ls -R cc_reports cc_html
