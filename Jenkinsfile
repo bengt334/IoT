@@ -47,7 +47,7 @@ pipeline {
 
                                 # 2) Analyze
                                 echo "*******************CodeChecker analyze compile**************************"
-                                CodeChecker analyze compile_commands.json -o cc_reports
+                                CodeChecker analyze compile_commands.json -o cc_reports --analyzers gcc -e gcc
 
                                 # Optional: create HTML from reports for easier viewing
                                 echo "*******************CodeChecker parse*************************"
