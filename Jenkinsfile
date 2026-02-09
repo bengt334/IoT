@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        ZEPHYR_IMAGE = 'my-zephyr-codechecker:latest'
+        ZEPHYR_IMAGE = 'my-zephyr-codechecker:v1'
         BOARD       = 'esp32s3_devkitc/esp32s3/procpu'
         APP_PATH    = 'IoT'          // app lives inside cloned repo
     }
