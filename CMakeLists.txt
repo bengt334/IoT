@@ -2,7 +2,6 @@
 
 cmake_minimum_required(VERSION 3.20.0)
 set(CODECHECKER_ANALYZE_OPTS
-  "--config;${CMAKE_SOURCE_DIR}/config/codechecker.yml;"
   "--skip;${CMAKE_SOURCE_DIR}/config/skip.codechecker"
   CACHE STRING "CodeChecker options")
 set(CODECHECKER_ANALYZE_OPTS
